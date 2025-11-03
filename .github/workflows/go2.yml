@@ -1,0 +1,35 @@
+name: Go CI (new_workflow)
+
+on:
+  push:
+    branches: ["new_workflow"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-go@v5
+      with:
+        go-version: '1.23'
+
+    - name: Tidy (ok if no deps)
+      run: go mod tidy || true
+
+    - name: Build
+      run: go build -v ./...
+
+  tests:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-go@v5
+      with:
+        go-version: '1.23'
+
+    - name: Tidy (ok if no deps)
+      run: go mod tidy || true
+
+    - name: Test
+      run: go test -v ./...
